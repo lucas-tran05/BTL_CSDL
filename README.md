@@ -28,7 +28,8 @@ pip install -r requirements.txt
 
 5. Insert data mẫu từ link:
 [Link data mẫu](https://docs.google.com/document/d/1ljwpflCI7xKRj5VrLPdS0dlG0Q_ekCy7BKbIrCTMdyo/edit?tab=t.0)
-5. Chạy dự án:
+
+6. Chạy dự án:
 ```bash
 python main.py 
 ```
