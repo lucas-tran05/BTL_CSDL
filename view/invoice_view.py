@@ -7,6 +7,19 @@ class InvoiceView:
     """View layer for Invoice Management GUI"""
     
     @staticmethod
+    def validate_id(value, field_name, max_length, required=True):
+        """Validate ID format (letters, numbers only)"""
+        if not value:
+            if required:
+                return False, f"Vui lòng nhập {field_name}"
+            return True, ""
+        if len(value) > max_length:
+            return False, f"{field_name} không được quá {max_length} ký tự"
+        if not value.replace('_', '').isalnum():
+            return False, f"{field_name} chỉ được chứa chữ và số"
+        return True, ""
+    
+    @staticmethod
     def validate_string_length(value, field_name, max_length, required=True):
         """Validate string length"""
         if not value:
@@ -407,7 +420,7 @@ class InvoiceView:
         giam_gia_str = self.entry_giam_gia.get().strip()
         
         # Validate ma_hoa_don
-        valid, msg = self.validate_string_length(ma_hoa_don, "Mã hóa đơn", 20, required=True)
+        valid, msg = self.validate_id(ma_hoa_don, "Mã hóa đơn", 50, required=True)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return
@@ -419,7 +432,7 @@ class InvoiceView:
             return
         
         # Validate ma_nv
-        valid, msg = self.validate_string_length(ma_nv, "Mã nhân viên", 20, required=True)
+        valid, msg = self.validate_id(ma_nv, "Mã nhân viên", 50, required=True)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return

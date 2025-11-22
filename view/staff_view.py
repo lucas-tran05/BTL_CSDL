@@ -18,22 +18,35 @@ class StaffView:
     
     @staticmethod
     def validate_date_format(date_str):
-        """Validate date format DD/MM/YYYY"""
+        """Validate date format YYYY-MM-DD"""
         if not date_str:
             return False, "Vui lòng nhập ngày"
         
         import re
-        date_pattern = r'^\d{2}/\d{2}/\d{4}$'
+        date_pattern = r'^\d{4}-\d{2}-\d{2}$'
         if not re.match(date_pattern, date_str):
-            return False, "Ngày phải theo định dạng DD/MM/YYYY"
+            return False, "Ngày phải theo định dạng YYYY-MM-DD"
         
         try:
             from datetime import datetime
-            day, month, year = map(int, date_str.split('/'))
+            year, month, day = map(int, date_str.split('-'))
             datetime(year, month, day)
             return True, ""
         except ValueError:
             return False, "Ngày không hợp lệ"
+    
+    @staticmethod
+    def validate_id(value, field_name, max_length, required=True):
+        """Validate ID format (letters, numbers only)"""
+        if not value:
+            if required:
+                return False, f"Vui lòng nhập {field_name}"
+            return True, ""
+        if len(value) > max_length:
+            return False, f"{field_name} không được quá {max_length} ký tự"
+        if not value.replace('_', '').isalnum():
+            return False, f"{field_name} chỉ được chứa chữ và số"
+        return True, ""
     
     @staticmethod
     def validate_string_length(value, field_name, max_length, required=True):
@@ -141,17 +154,17 @@ class StaffView:
             
             # Add placeholder text for date field
             if field_name == "ngay_vao_lam":
-                entry.insert(0, "DD/MM/YYYY")
-                entry.config(foreground='gray')
+                entry.insert(0, "YYYY-MM-DD")
+                entry.config(foreground='black' if entry.get() != "YYYY-MM-DD" else 'gray')
                 
                 def on_focus_in(event, e=entry):
-                    if e.get() == "DD/MM/YYYY":
+                    if e.get() == "YYYY-MM-DD":
                         e.delete(0, tk.END)
                         e.config(foreground='black')
                 
                 def on_focus_out(event, e=entry):
                     if not e.get():
-                        e.insert(0, "DD/MM/YYYY")
+                        e.insert(0, "YYYY-MM-DD")
                         e.config(foreground='gray')
                 
                 entry.bind('<FocusIn>', on_focus_in)
@@ -280,12 +293,11 @@ class StaffView:
     
     def on_search_change(self, *args):
         """Handle search field change (for live search)"""
-        # Uncomment for live search
-        # search_term = self.search_var.get().strip()
-        # if search_term:
-        #     self.controller.search_staff(search_term)
-        # else:
-        #     self.loadData()
+        search_term = self.search_var.get().strip()
+        if search_term:
+            self.controller.search_staff(search_term)
+        else:
+            self.loadData()
         pass
     
     def on_tree_select(self, event):
@@ -297,13 +309,13 @@ class StaffView:
             
             # Fill form with selected staff data
             self.entries['ma_nv'].delete(0, tk.END)
-            self.entries['ma_nv'].insert(0, values[0])
+            self.entries['ma_nv'].insert(0, str(values[0]))
             
             self.entries['ho_va_ten'].delete(0, tk.END)
-            self.entries['ho_va_ten'].insert(0, values[1])
+            self.entries['ho_va_ten'].insert(0, str(values[1]))
             
             self.entries['sdt'].delete(0, tk.END)
-            self.entries['sdt'].insert(0, values[3])
+            self.entries['sdt'].insert(0, str(values[3]))
             
             self.entries['chuc_vu'].set(values[2])
             
@@ -321,7 +333,7 @@ class StaffView:
         """Get data from form fields"""
         ngay_vao_lam = self.entries['ngay_vao_lam'].get().strip()
         # Don't return placeholder text
-        if ngay_vao_lam == "DD/MM/YYYY":
+        if ngay_vao_lam == "YYYY-MM-DD":
             ngay_vao_lam = ""
         
         return {
@@ -336,7 +348,7 @@ class StaffView:
     def validate_form_data(self, data):
         """Validate form data"""
         # Validate ma_nv
-        valid, msg = self.validate_string_length(data['ma_nv'], "Mã nhân viên", 20, required=True)
+        valid, msg = self.validate_id(data['ma_nv'], "Mã nhân viên", 50, required=True)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return False
@@ -365,7 +377,7 @@ class StaffView:
             return False
         
         # Validate ma_quan_ly
-        valid, msg = self.validate_string_length(data['ma_quan_ly'], "Mã quản lý", 20, required=False)
+        valid, msg = self.validate_id(data['ma_quan_ly'], "Mã quản lý", 50, required=False)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return False
@@ -402,12 +414,12 @@ class StaffView:
         # Insert new items
         for emp in staff_list:
             self.tree.insert('', tk.END, values=(
-                emp.get('ma_nv', ''),
-                emp.get('ho_va_ten', ''),
-                emp.get('chuc_vu', ''),
-                emp.get('sdt', ''),
-                emp.get('ngay_vao_lam', ''),
-                emp.get('ma_quan_ly', '')
+                str(emp.get('ma_nv', '')),
+                str(emp.get('ho_va_ten', '')),
+                str(emp.get('chuc_vu', '')),
+                str(emp.get('sdt', '')),
+                str(emp.get('ngay_vao_lam', '')),
+                str(emp.get('ma_quan_ly', ''))
             ))
     
     def show_message(self, title, message, msg_type="info"):
@@ -428,7 +440,7 @@ class StaffView:
             elif field_name == "ngay_vao_lam":
                 # Reset date field to placeholder
                 entry.delete(0, tk.END)
-                entry.insert(0, "DD/MM/YYYY")
+                entry.insert(0, "YYYY-MM-DD")
                 entry.config(foreground='gray')
             else:
                 # For Entry widgets

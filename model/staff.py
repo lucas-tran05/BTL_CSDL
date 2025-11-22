@@ -9,16 +9,14 @@ class Staff:
         self.db = db
     
     def _convert_date_format(self, date_str):
-        """Convert date from DD/MM/YYYY to YYYY-MM-DD for MySQL"""
+        """Validate date format YYYY-MM-DD for MySQL"""
         try:
             if not date_str:
                 return None
-            # Try parsing DD/MM/YYYY format
-            if '/' in date_str:
-                dt = datetime.strptime(date_str, '%d/%m/%Y')
-                return dt.strftime('%Y-%m-%d')
             # Already in YYYY-MM-DD format
-            elif '-' in date_str:
+            if '-' in date_str:
+                # Validate it's a proper date
+                datetime.strptime(date_str, '%Y-%m-%d')
                 return date_str
             return None
         except:
