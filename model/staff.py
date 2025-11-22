@@ -35,7 +35,7 @@ class Staff:
         result = self.db.fetch_query(query, (chuc_vu,))
         return result[0]['count'] > 0 if result else False
     
-    def create_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly, so_gio_lam=0, thuong=0):
+    def create_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly):
         """
         Create a new staff (NHAN_VIEN and LUONG tables)
         Returns: (success: bool, error_message: str)
@@ -61,12 +61,12 @@ class Staff:
             if not cursor_nv:
                 return False, "Không thể thêm nhân viên. Có thể mã nhân viên đã tồn tại."
             
-            # Insert into LUONG table only if NHAN_VIEN insert succeeded
+            # Insert into LUONG table with default values (0 for so_gio_lam and thuong)
             query_luong = """
             INSERT INTO LUONG (ma_nv, so_gio_lam, thuong)
-            VALUES (%s, %s, %s)
+            VALUES (%s, 0, 0)
             """
-            params_luong = (ma_nv, so_gio_lam if so_gio_lam else 0, thuong if thuong else 0)
+            params_luong = (ma_nv,)
             cursor_luong = self.db.execute_query(query_luong, params_luong)
             
             if cursor_luong:
@@ -80,14 +80,12 @@ class Staff:
     
     def get_all_staff(self):
         """
-        Get all staff with LUONG and BAC_LUONG info
+        Get all staff information
         """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
-               nv.ma_quan_ly, l.so_gio_lam, l.thuong, bl.he_so_luong
+               nv.ma_quan_ly
         FROM NHAN_VIEN nv
-        LEFT JOIN LUONG l ON nv.ma_nv = l.ma_nv
-        LEFT JOIN BAC_LUONG bl ON nv.chuc_vu = bl.chuc_vu
         ORDER BY nv.ma_nv DESC
         """
         return self.db.fetch_query(query)
@@ -98,10 +96,8 @@ class Staff:
         """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
-               nv.ma_quan_ly, l.so_gio_lam, l.thuong, bl.he_so_luong
+               nv.ma_quan_ly
         FROM NHAN_VIEN nv
-        LEFT JOIN LUONG l ON nv.ma_nv = l.ma_nv
-        LEFT JOIN BAC_LUONG bl ON nv.chuc_vu = bl.chuc_vu
         WHERE nv.ho_va_ten LIKE %s OR nv.chuc_vu LIKE %s OR nv.sdt LIKE %s OR nv.ma_nv LIKE %s
         ORDER BY nv.ma_nv DESC
         """
@@ -115,10 +111,8 @@ class Staff:
         """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
-               nv.ma_quan_ly, l.so_gio_lam, l.thuong, bl.he_so_luong
+               nv.ma_quan_ly
         FROM NHAN_VIEN nv
-        LEFT JOIN LUONG l ON nv.ma_nv = l.ma_nv
-        LEFT JOIN BAC_LUONG bl ON nv.chuc_vu = bl.chuc_vu
         WHERE nv.ma_nv = %s
         """
         params = (ma_nv,)
@@ -145,10 +139,10 @@ class Staff:
             # Update LUONG table
             query_luong = """
             UPDATE LUONG 
-            SET so_gio_lam=%s, thuong=%s
+            SET so_gio_lam=0, thuong=0
             WHERE ma_nv=%s
             """
-            params_luong = (so_gio_lam if so_gio_lam else 0, thuong if thuong else 0, ma_nv)
+            params_luong = (ma_nv,)
             cursor = self.db.execute_query(query_luong, params_luong)
             
             return cursor is not None

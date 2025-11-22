@@ -25,9 +25,7 @@ class StaffController:
                 data['sdt'],
                 data['chuc_vu'],
                 data['ngay_vao_lam'],
-                data['ma_quan_ly'],
-                data['so_gio_lam'],
-                data.get('thuong', 0)
+                data['ma_quan_ly']
             )
             
             if success:

@@ -12,7 +12,9 @@ class MainApplication:
     def __init__(self, root):
         self.root = root
         self.root.title("Hệ thống Quản lý - Management System")
-        self.root.geometry("1800x900")
+        # Set window to full screen
+        self.root.state('zoomed')  # For Windows
+        # Alternative: self.root.attributes('-fullscreen', True)
         
         # Current active view and controller
         self.current_view = None

@@ -120,9 +120,7 @@ class StaffView:
             ("Số điện thoại:", "sdt"),
             ("Chức vụ:", "chuc_vu"),
             ("Ngày vào làm:", "ngay_vao_lam"),
-            ("Mã quản lý:", "ma_quan_ly"),
-            ("Số giờ làm:", "so_gio_lam"),
-            ("Thưởng:", "thuong")
+            ("Mã quản lý:", "ma_quan_ly")
         ]
         
         self.entries = {}
@@ -210,7 +208,7 @@ class StaffView:
         tree_scroll_x = ttk.Scrollbar(list_frame, orient=tk.HORIZONTAL)
         
         self.tree = ttk.Treeview(list_frame, 
-                                 columns=("Mã NV", "Họ tên", "Chức vụ", "SĐT", "Ngày vào làm", "Quản lý", "Số giờ", "Thưởng", "Hệ số"),
+                                 columns=("Mã NV", "Họ tên", "Chức vụ", "SĐT", "Ngày vào làm", "Quản lý"),
                                  show="headings",
                                  yscrollcommand=tree_scroll_y.set,
                                  xscrollcommand=tree_scroll_x.set)
@@ -225,20 +223,14 @@ class StaffView:
         self.tree.heading("SĐT", text="Số điện thoại")
         self.tree.heading("Ngày vào làm", text="Ngày vào làm")
         self.tree.heading("Quản lý", text="Mã quản lý")
-        self.tree.heading("Số giờ", text="Số giờ làm")
-        self.tree.heading("Thưởng", text="Thưởng")
-        self.tree.heading("Hệ số", text="Hệ số lương")
         
         # Column widths
-        self.tree.column("Mã NV", width=100, anchor=tk.CENTER)
-        self.tree.column("Họ tên", width=150, anchor=tk.W)
-        self.tree.column("Chức vụ", width=100, anchor=tk.W)
-        self.tree.column("SĐT", width=110, anchor=tk.CENTER)
-        self.tree.column("Ngày vào làm", width=110, anchor=tk.CENTER)
-        self.tree.column("Quản lý", width=90, anchor=tk.CENTER)
-        self.tree.column("Số giờ", width=90, anchor=tk.E)
-        self.tree.column("Thưởng", width=100, anchor=tk.E)
-        self.tree.column("Hệ số", width=90, anchor=tk.E)
+        self.tree.column("Mã NV", width=120, anchor=tk.CENTER)
+        self.tree.column("Họ tên", width=200, anchor=tk.W)
+        self.tree.column("Chức vụ", width=150, anchor=tk.W)
+        self.tree.column("SĐT", width=120, anchor=tk.CENTER)
+        self.tree.column("Ngày vào làm", width=120, anchor=tk.CENTER)
+        self.tree.column("Quản lý", width=120, anchor=tk.CENTER)
         
         # Bind selection event
         self.tree.bind('<<TreeviewSelect>>', self.on_tree_select)
@@ -321,12 +313,6 @@ class StaffView:
             self.entries['ma_quan_ly'].delete(0, tk.END)
             self.entries['ma_quan_ly'].insert(0, values[5])
             
-            self.entries['so_gio_lam'].delete(0, tk.END)
-            self.entries['so_gio_lam'].insert(0, values[6])
-            
-            self.entries['thuong'].delete(0, tk.END)
-            self.entries['thuong'].insert(0, values[7])
-            
             # Enable update and delete buttons
             self.btn_update.config(state='normal')
             self.btn_delete.config(state='normal')
@@ -344,9 +330,7 @@ class StaffView:
             'sdt': self.entries['sdt'].get().strip(),
             'chuc_vu': self.entries['chuc_vu'].get().strip(),
             'ngay_vao_lam': ngay_vao_lam,
-            'ma_quan_ly': self.entries['ma_quan_ly'].get().strip(),
-            'so_gio_lam': self.entries['so_gio_lam'].get().strip(),
-            'thuong': self.entries['thuong'].get().strip()
+            'ma_quan_ly': self.entries['ma_quan_ly'].get().strip()
         }
     
     def validate_form_data(self, data):
@@ -382,18 +366,6 @@ class StaffView:
         
         # Validate ma_quan_ly
         valid, msg = self.validate_string_length(data['ma_quan_ly'], "Mã quản lý", 20, required=False)
-        if not valid:
-            messagebox.showerror("Lỗi", msg)
-            return False
-        
-        # Validate so_gio_lam
-        valid, msg = self.validate_integer(data['so_gio_lam'], "Số giờ làm", min_val=0, max_val=744)
-        if not valid:
-            messagebox.showerror("Lỗi", msg)
-            return False
-        
-        # Validate thuong
-        valid, msg = self.validate_float(data['thuong'], "Thưởng", min_val=0, max_val=1000000000)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return False
@@ -435,10 +407,7 @@ class StaffView:
                 emp.get('chuc_vu', ''),
                 emp.get('sdt', ''),
                 emp.get('ngay_vao_lam', ''),
-                emp.get('ma_quan_ly', ''),
-                emp.get('so_gio_lam', ''),
-                f"{emp.get('thuong', 0):,.0f}" if emp.get('thuong') else '0',
-                emp.get('he_so_luong', '')
+                emp.get('ma_quan_ly', '')
             ))
     
     def show_message(self, title, message, msg_type="info"):
