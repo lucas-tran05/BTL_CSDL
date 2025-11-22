@@ -202,8 +202,25 @@ class InvoiceView:
         """Setup the bottom panel with invoice list"""
         list_frame = ttk.LabelFrame(parent, text="Danh sách Hóa đơn", padding="10")
         list_frame.grid(row=1, column=0, columnspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), pady=(10, 0))
-        list_frame.grid_rowconfigure(0, weight=1)
+        list_frame.grid_rowconfigure(1, weight=1)
         list_frame.grid_columnconfigure(0, weight=1)
+        
+        # Search frame
+        search_frame = ttk.Frame(list_frame)
+        search_frame.grid(row=0, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        search_frame.grid_columnconfigure(0, weight=1)
+        
+        ttk.Label(search_frame, text="Tìm kiếm:").grid(row=0, column=0, sticky=tk.W, padx=(0, 5))
+        
+        self.search_var = tk.StringVar()
+        search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=30)
+        search_entry.grid(row=0, column=1, sticky=tk.W, padx=5)
+        
+        search_btn = ttk.Button(search_frame, text="Tìm kiếm", command=self.on_search_click)
+        search_btn.grid(row=0, column=2, padx=5)
+        
+        refresh_btn = ttk.Button(search_frame, text="Làm mới", command=self.loadData)
+        refresh_btn.grid(row=0, column=3, padx=5)
         
         # Treeview with scrollbars
         tree_scroll_y = ttk.Scrollbar(list_frame, orient=tk.VERTICAL)
@@ -235,9 +252,9 @@ class InvoiceView:
         self.tree.column("Thành tiền", width=120, anchor=tk.E)
         
         # Grid layout
-        self.tree.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        tree_scroll_y.grid(row=0, column=1, sticky=(tk.N, tk.S))
-        tree_scroll_x.grid(row=1, column=0, sticky=(tk.W, tk.E))
+        self.tree.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        tree_scroll_y.grid(row=1, column=1, sticky=(tk.N, tk.S))
+        tree_scroll_x.grid(row=2, column=0, sticky=(tk.W, tk.E))
     
     def populate_medicine_combobox(self):
         """Populate medicine combobox from database"""
@@ -480,6 +497,14 @@ class InvoiceView:
             messagebox.showerror(title, message)
         elif msg_type == "warning":
             messagebox.showwarning(title, message)
+    
+    def on_search_click(self):
+        """Handle search button click"""
+        search_term = self.search_var.get().strip()
+        if search_term:
+            self.controller.search_invoices(search_term)
+        else:
+            self.loadData()
     
     def loadData(self):
         """Load data into the invoice list"""

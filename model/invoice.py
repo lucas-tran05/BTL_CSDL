@@ -105,9 +105,35 @@ class Invoice:
         except Exception as e:
             return False, f"Lỗi khi xóa hóa đơn: {str(e)}"
     
-    def get_all_medicines(self):
+    def search_invoices(self, search_term):
+        """Search invoices by ID, customer name, or staff ID"""
+        query = """
+        SELECT 
+            h.ma_hoa_don,
+            h.ten_khach_hang,
+            h.ngay_gio,
+            h.ma_nv,
+            COALESCE(SUM(ht.so_luong * ht.gia_ban), 0) as tong_tien_hang,
+            COALESCE(SUM(ht.so_luong * ht.gia_ban * ht.giam_gia / 100), 0) as tong_giam_gia,
+            COALESCE(SUM(ht.so_luong * ht.gia_ban * (1 - ht.giam_gia / 100)), 0) as thanh_tien
+        FROM HOA_DON h
+        LEFT JOIN HOA_DON_THUOC ht 
+            ON h.ma_hoa_don = ht.ma_hoa_don
+        WHERE h.ma_hoa_don LIKE %s 
+           OR h.ten_khach_hang LIKE %s
+           OR h.ma_nv LIKE %s
+        GROUP BY 
+            h.ma_hoa_don,
+            h.ten_khach_hang,
+            h.ngay_gio,
+            h.ma_nv
+        ORDER BY h.ngay_gio DESC
         """
-        Get all medicines for invoice creation, including don_vi_tinh and gia_ban
+        search_pattern = f"%{search_term}%"
+        return self.db.fetch_query(query, (search_pattern, search_pattern, search_pattern))
+    
+    def get_all_medicines(self):
+        """Get all medicines for invoice creation, including don_vi_tinh and gia_ban
         Get the most recent price and unit for each medicine
         """
         query = """

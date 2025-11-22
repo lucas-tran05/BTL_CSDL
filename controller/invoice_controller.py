@@ -37,6 +37,16 @@ class InvoiceController:
         except Exception as e:
             self.view.show_message("Lỗi", f"Không thể tải danh sách hóa đơn: {str(e)}", "error")
     
+    def search_invoices(self, search_term):
+        """Search invoices"""
+        try:
+            invoices = self.invoice_model.search_invoices(search_term)
+            self.view.display_invoices(invoices)
+            if not invoices:
+                self.view.show_message("Thông báo", "Không tìm thấy hóa đơn nào", "info")
+        except Exception as e:
+            self.view.show_message("Lỗi", f"Không thể tìm kiếm hóa đơn: {str(e)}", "error")
+    
     def get_all_medicines(self):
         """Get all medicines for invoice creation"""
         try:
