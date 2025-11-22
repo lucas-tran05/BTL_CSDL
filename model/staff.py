@@ -117,7 +117,7 @@ class Staff:
         result = self.db.fetch_query(query, params)
         return result[0] if result else None
     
-    def update_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly, so_gio_lam, thuong=0):
+    def update_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly):
         """
         Update staff information (NHAN_VIEN and LUONG tables)
         """
@@ -133,15 +133,6 @@ class Staff:
             """
             params_nv = (ho_va_ten, sdt, chuc_vu, ngay_vao_lam_formatted, ma_quan_ly if ma_quan_ly else None, ma_nv)
             cursor = self.db.execute_query(query_nv, params_nv)
-            
-            # Update LUONG table
-            query_luong = """
-            UPDATE LUONG 
-            SET so_gio_lam=0, thuong=0
-            WHERE ma_nv=%s
-            """
-            params_luong = (ma_nv,)
-            cursor = self.db.execute_query(query_luong, params_luong)
             
             return cursor is not None
         except Exception as e:
