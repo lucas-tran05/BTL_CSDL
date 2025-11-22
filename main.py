@@ -4,6 +4,9 @@ from view.staff_view import StaffView
 from controller.staff_controller import StaffController
 from view.invoice_view import InvoiceView
 from controller.invoice_controller import InvoiceController
+from view.report_view import ReportView
+from controller.report_controller import ReportController
+from config.db_config import load_db_config
 
 
 class MainApplication:
@@ -38,7 +41,7 @@ class MainApplication:
         # Add menu items directly to menubar
         menubar.add_command(label="Nhân viên", command=self.show_staff_view)
         menubar.add_command(label="Hóa đơn", command=self.show_invoice_view)
-        menubar.add_command(label="Báo cáo", command=lambda: self.current_view.show_message("Thông báo", "Chức năng Báo cáo đang được phát triển.", "info"))
+        menubar.add_command(label="Báo cáo", command=self.show_report_view)
         menubar.add_command(label="Thoát", command=self.quit_application)
     
     def clear_main_container(self):
@@ -107,6 +110,24 @@ class MainApplication:
         
         # Update window title
         self.root.title("Hệ thống Quản lý - Hóa đơn")
+    
+    def show_report_view(self):
+        """Show report management view"""
+        if self.current_controller:
+            self.current_controller.close()
+        self.clear_main_container()
+        report_frame = ttk.Frame(self.main_container)
+        report_frame.pack(fill=tk.BOTH, expand=True)
+        view = ReportView(report_frame, None)
+        mysql_config = load_db_config()
+        controller = ReportController(view, backend="mysql", mysql_config=mysql_config)
+        view.controller = controller
+        self.current_view = view
+        self.current_controller = controller
+        controller.load_positions()
+        controller.load_seniority()
+        controller.load_revenue(view.revenue_frame.month_year_cb.get())
+        self.root.title("Hệ thống Quản lý - Báo cáo")
     
     def quit_application(self):
         """Quit the application"""
