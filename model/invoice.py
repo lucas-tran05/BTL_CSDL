@@ -108,12 +108,21 @@ class Invoice:
     def get_all_medicines(self):
         """
         Get all medicines for invoice creation, including don_vi_tinh and gia_ban
+        Get the most recent price and unit for each medicine
         """
         query = """
         SELECT t.ma_thuoc, t.ten_thuoc, t.hang_sx, t.so_luong_ton_kho,
-        ht.gia_ban, ht.don_vi_tinh
+               ht.gia_ban, ht.don_vi_tinh
         FROM THUOC t
-        LEFT JOIN HOA_DON_THUOC ht ON t.ma_thuoc = ht.ma_thuoc
+        LEFT JOIN (
+            SELECT ma_thuoc, gia_ban, don_vi_tinh
+            FROM HOA_DON_THUOC
+            WHERE (ma_thuoc, ma_hoa_don) IN (
+                SELECT ma_thuoc, MAX(ma_hoa_don) as ma_hoa_don
+                FROM HOA_DON_THUOC
+                GROUP BY ma_thuoc
+            )
+        ) ht ON t.ma_thuoc = ht.ma_thuoc
         ORDER BY t.ten_thuoc
         """
         return self.db.fetch_query(query)
