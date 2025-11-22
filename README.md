@@ -26,6 +26,8 @@ pip install -r requirements.txt
 4. Tạo 1 db với lệnh tạo bảng qua link 
 [Link create table](https://docs.google.com/document/d/1uiwMN9kMGDCypo8SoTqHyuk_lFsSRh4-MgDHGx2NCYc/edit?tab=t.0)
 
+5. Insert data mẫu từ link:
+[Link data mẫu](https://docs.google.com/document/d/1ljwpflCI7xKRj5VrLPdS0dlG0Q_ekCy7BKbIrCTMdyo/edit?tab=t.0)
 5. Chạy dự án:
 ```bash
 python main.py 
