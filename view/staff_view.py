@@ -314,16 +314,23 @@ class StaffView:
             self.entries['ho_va_ten'].delete(0, tk.END)
             self.entries['ho_va_ten'].insert(0, str(values[1]))
             
+            # Handle phone number - ensure leading zeros are preserved
             self.entries['sdt'].delete(0, tk.END)
-            self.entries['sdt'].insert(0, str(values[3]))
+            sdt_value = str(values[3])
+            # If phone number looks like it lost leading zero, add it back
+            if sdt_value and sdt_value.isdigit() and len(sdt_value) == 9:
+                sdt_value = '0' + sdt_value
+            self.entries['sdt'].insert(0, sdt_value)
             
-            self.entries['chuc_vu'].set(values[2])
+            self.entries['chuc_vu'].set(str(values[2]))
             
+            # Handle date field - clear placeholder first
+            self.entries['ngay_vao_lam'].config(foreground='black')
             self.entries['ngay_vao_lam'].delete(0, tk.END)
-            self.entries['ngay_vao_lam'].insert(0, values[4])
+            self.entries['ngay_vao_lam'].insert(0, str(values[4]))
             
             self.entries['ma_quan_ly'].delete(0, tk.END)
-            self.entries['ma_quan_ly'].insert(0, values[5])
+            self.entries['ma_quan_ly'].insert(0, str(values[5]) if values[5] else '')
             
             # Enable update and delete buttons
             self.btn_update.config(state='normal')
