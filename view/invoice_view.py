@@ -97,7 +97,7 @@ class InvoiceView:
         style.configure('TButton', font=self.button_font, padding=8)
         style.configure('TEntry', font=self.input_font, padding=5)
         style.configure('TCombobox', font=self.input_font, padding=5)
-        style.configure('Treeview', font=('Arial', 15), rowheight=30)
+        style.configure('Treeview', font=('Arial', 15), rowheight=20)
         style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
         
         # Configure option menu (dropdown) font
