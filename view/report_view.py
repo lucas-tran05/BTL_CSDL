@@ -13,14 +13,15 @@ class ReportView:
     def _build_ui(self):
         # Configure font styles
         style = ttk.Style()
-        style.configure('TLabel', font=('Arial', 12))
-        style.configure('TButton', font=('Arial', 12), padding=8)
-        style.configure('TCombobox', font=('Arial', 12))
-        style.configure('Treeview', font=('Arial', 11), rowheight=28)
-        style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+        style.configure('TLabel', font=('Arial', 16))
+        style.configure('TLabelframe.Label', font=('Arial', 16, 'bold'))
+        style.configure('TButton', font=('Arial', 16), padding=8)
+        style.configure('TCombobox', font=('Arial', 16), padding=5)
+        style.configure('Treeview', font=('Arial', 15), rowheight=30)
+        style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
         
         # Configure option menu (dropdown) font
-        self.parent.option_add('*TCombobox*Listbox.font', ('Arial', 12))
+        self.parent.option_add('*TCombobox*Listbox.font', ('Arial', 16))
         
         notebook = ttk.Notebook(self.parent)
         notebook.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
@@ -134,7 +135,7 @@ class SeniorityReportFrame:
         filter_frame.pack(fill=tk.X, padx=4, pady=4)
 
         ttk.Label(filter_frame, text="Lọc theo Chức vụ:").pack(side=tk.LEFT, padx=(8,4), pady=4)
-        self.position_cb = ttk.Combobox(filter_frame, width=30, state="readonly")
+        self.position_cb = ttk.Combobox(filter_frame, width=35, state="readonly")
         self.position_cb.pack(side=tk.LEFT, padx=4, pady=4)
         self.position_cb.bind("<<ComboboxSelected>>", self._on_filter)
 
@@ -204,7 +205,7 @@ class RevenueReportFrame:
         filter_frame.pack(fill=tk.X, padx=4, pady=4)
 
         ttk.Label(filter_frame, text="Chọn Tháng/Năm (MM/yyyy):").pack(side=tk.LEFT, padx=(8,4), pady=4)
-        self.month_year_cb = ttk.Combobox(filter_frame, width=12, state="readonly")
+        self.month_year_cb = ttk.Combobox(filter_frame, width=15, state="readonly")
         self.month_year_cb.pack(side=tk.LEFT, padx=4, pady=4)
         self._populate_months()
         self.month_year_cb.bind("<<ComboboxSelected>>", self._on_change)

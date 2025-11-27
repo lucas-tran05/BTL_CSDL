@@ -98,20 +98,21 @@ class StaffView:
         self.controller = controller
         
         # Configure font styles
-        self.default_font = ('Arial', 12)
-        self.label_font = ('Arial', 12)
-        self.button_font = ('Arial', 12)
-        self.heading_font = ('Arial', 13, 'bold')
-        self.input_font = ('Arial', 12)
+        self.default_font = ('Arial', 16)
+        self.label_font = ('Arial', 16)
+        self.button_font = ('Arial', 16)
+        self.heading_font = ('Arial', 18, 'bold')
+        self.input_font = ('Arial', 16)
         
         # Configure ttk styles
         style = ttk.Style()
         style.configure('TLabel', font=self.label_font)
+        style.configure('TLabelframe.Label', font=('Arial', 16, 'bold'))
         style.configure('TButton', font=self.button_font, padding=8)
-        style.configure('TEntry', font=self.input_font)
-        style.configure('TCombobox', font=self.input_font)
-        style.configure('Treeview', font=('Arial', 11), rowheight=28)
-        style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+        style.configure('TEntry', font=self.input_font, padding=5)
+        style.configure('TCombobox', font=self.input_font, padding=5)
+        style.configure('Treeview', font=('Arial', 15), rowheight=30)
+        style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
         
         # Configure option menu (dropdown) font
         self.root.option_add('*TCombobox*Listbox.font', self.input_font)
@@ -163,12 +164,12 @@ class StaffView:
             
             # Use Combobox for chuc_vu field
             if field_name == "chuc_vu":
-                entry = ttk.Combobox(form_frame, width=28, state='readonly')
+                entry = ttk.Combobox(form_frame, width=33, state='readonly')
                 # Will be populated later via update_positions method
                 entry['values'] = self.positions
                 entry.grid(row=idx, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
             else:
-                entry = ttk.Entry(form_frame, width=30)
+                entry = ttk.Entry(form_frame, width=35)
                 entry.grid(row=idx, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
             
             # Add placeholder text for date field
@@ -219,7 +220,7 @@ class StaffView:
         self.search_var = tk.StringVar()
         self.search_var.trace('w', self.on_search_change)
         
-        search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=30)
+        search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=35)
         search_entry.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=5)
         
         search_btn = ttk.Button(search_frame, text="Tìm kiếm", 

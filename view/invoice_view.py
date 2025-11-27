@@ -84,20 +84,21 @@ class InvoiceView:
         self.controller = controller
         
         # Configure font styles
-        self.default_font = ('Arial', 12)
-        self.label_font = ('Arial', 12)
-        self.button_font = ('Arial', 12)
-        self.heading_font = ('Arial', 13, 'bold')
-        self.input_font = ('Arial', 12)
+        self.default_font = ('Arial', 16)
+        self.label_font = ('Arial', 16)
+        self.button_font = ('Arial', 16)
+        self.heading_font = ('Arial', 18, 'bold')
+        self.input_font = ('Arial', 16)
         
         # Configure ttk styles
         style = ttk.Style()
         style.configure('TLabel', font=self.label_font)
+        style.configure('TLabelframe.Label', font=('Arial', 16, 'bold'))
         style.configure('TButton', font=self.button_font, padding=8)
-        style.configure('TEntry', font=self.input_font)
-        style.configure('TCombobox', font=self.input_font)
-        style.configure('Treeview', font=('Arial', 11), rowheight=28)
-        style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+        style.configure('TEntry', font=self.input_font, padding=5)
+        style.configure('TCombobox', font=self.input_font, padding=5)
+        style.configure('Treeview', font=('Arial', 15), rowheight=30)
+        style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
         
         # Configure option menu (dropdown) font
         self.root.option_add('*TCombobox*Listbox.font', self.input_font)
@@ -138,19 +139,19 @@ class InvoiceView:
         
         # Invoice info fields
         ttk.Label(form_frame, text="Mã hóa đơn:").grid(row=0, column=0, sticky=tk.W, pady=5)
-        self.entry_ma_hoa_don = ttk.Entry(form_frame, width=30)
+        self.entry_ma_hoa_don = ttk.Entry(form_frame, width=35)
         self.entry_ma_hoa_don.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
         
         ttk.Label(form_frame, text="Tên khách hàng:").grid(row=1, column=0, sticky=tk.W, pady=5)
-        self.entry_ten_khach_hang = ttk.Entry(form_frame, width=30)
+        self.entry_ten_khach_hang = ttk.Entry(form_frame, width=35)
         self.entry_ten_khach_hang.grid(row=1, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
         
         ttk.Label(form_frame, text="Mã Nhân Viên:").grid(row=2, column=0, sticky=tk.W, pady=5)
-        self.entry_ma_nv = ttk.Entry(form_frame, width=30)
+        self.entry_ma_nv = ttk.Entry(form_frame, width=35)
         self.entry_ma_nv.grid(row=2, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
         
         ttk.Label(form_frame, text="Giảm giá (%):").grid(row=3, column=0, sticky=tk.W, pady=5)
-        self.entry_giam_gia = ttk.Entry(form_frame, width=30)
+        self.entry_giam_gia = ttk.Entry(form_frame, width=35)
         self.entry_giam_gia.insert(0, "0")
         self.entry_giam_gia.grid(row=3, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
         self.entry_giam_gia.bind('<KeyRelease>', lambda e: self.update_total())
@@ -161,21 +162,21 @@ class InvoiceView:
         medicine_frame.grid_columnconfigure(1, weight=1)
         
         ttk.Label(medicine_frame, text="Thuốc:").grid(row=0, column=0, sticky=tk.W, pady=5)
-        self.combo_medicine = ttk.Combobox(medicine_frame, state='readonly', width=40)
+        self.combo_medicine = ttk.Combobox(medicine_frame, state='readonly', width=45)
         self.combo_medicine.grid(row=0, column=1, sticky=(tk.W, tk.E), pady=5, padx=5)
         self.combo_medicine.bind('<<ComboboxSelected>>', self.on_medicine_selected)
         
         ttk.Label(medicine_frame, text="Số lượng:").grid(row=1, column=0, sticky=tk.W, pady=5)
-        self.entry_so_luong = ttk.Entry(medicine_frame, width=20)
+        self.entry_so_luong = ttk.Entry(medicine_frame, width=25)
         self.entry_so_luong.insert(0, "1")
         self.entry_so_luong.grid(row=1, column=1, sticky=tk.W, pady=5, padx=5)
         
         ttk.Label(medicine_frame, text="Đơn giá:").grid(row=2, column=0, sticky=tk.W, pady=5)
-        self.entry_don_gia = ttk.Entry(medicine_frame, width=20, state='readonly')
+        self.entry_don_gia = ttk.Entry(medicine_frame, width=25, state='readonly')
         self.entry_don_gia.grid(row=2, column=1, sticky=tk.W, pady=5, padx=5)
         
         ttk.Label(medicine_frame, text="Đơn vị tính:").grid(row=3, column=0, sticky=tk.W, pady=5)
-        self.entry_don_vi_tinh = ttk.Entry(medicine_frame, width=20, state='readonly')
+        self.entry_don_vi_tinh = ttk.Entry(medicine_frame, width=25, state='readonly')
         self.entry_don_vi_tinh.grid(row=3, column=1, sticky=tk.W, pady=5, padx=5)
         
         btn_add_medicine = ttk.Button(medicine_frame, text="Thêm thuốc", command=self.on_add_medicine_click)
@@ -185,9 +186,11 @@ class InvoiceView:
         total_frame = ttk.Frame(form_frame)
         total_frame.grid(row=5, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=10)
         
-        ttk.Label(total_frame, text="Tổng tiền:", font=('Arial', 14, 'bold')).pack(anchor=tk.W, pady=5)
-        self.label_total = ttk.Label(total_frame, text="0 VNĐ", font=('Arial', 16, 'bold'), foreground='red')
-        self.label_total.pack(anchor=tk.W, pady=5)
+        total_display_frame = ttk.Frame(total_frame)
+        total_display_frame.pack(fill=tk.X, pady=5)
+        ttk.Label(total_display_frame, text="Tổng tiền:", font=('Arial', 18, 'bold')).pack(side=tk.LEFT, padx=(0, 10))
+        self.label_total = ttk.Label(total_display_frame, text="0 VNĐ", font=('Arial', 20, 'bold'), foreground='red')
+        self.label_total.pack(side=tk.LEFT)
         
         btn_frame = ttk.Frame(total_frame)
         btn_frame.pack(fill=tk.X, pady=10)
@@ -245,7 +248,7 @@ class InvoiceView:
         ttk.Label(search_frame, text="Tìm kiếm:").grid(row=0, column=0, sticky=tk.W, padx=(0, 5))
         
         self.search_var = tk.StringVar()
-        search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=30)
+        search_entry = ttk.Entry(search_frame, textvariable=self.search_var, width=35)
         search_entry.grid(row=0, column=1, sticky=tk.W, padx=5)
         
         search_btn = ttk.Button(search_frame, text="Tìm kiếm", command=self.on_search_click)
