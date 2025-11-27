@@ -83,6 +83,25 @@ class InvoiceView:
         self.root = root
         self.controller = controller
         
+        # Configure font styles
+        self.default_font = ('Arial', 12)
+        self.label_font = ('Arial', 12)
+        self.button_font = ('Arial', 12)
+        self.heading_font = ('Arial', 13, 'bold')
+        self.input_font = ('Arial', 12)
+        
+        # Configure ttk styles
+        style = ttk.Style()
+        style.configure('TLabel', font=self.label_font)
+        style.configure('TButton', font=self.button_font, padding=8)
+        style.configure('TEntry', font=self.input_font)
+        style.configure('TCombobox', font=self.input_font)
+        style.configure('Treeview', font=('Arial', 11), rowheight=28)
+        style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+        
+        # Configure option menu (dropdown) font
+        self.root.option_add('*TCombobox*Listbox.font', self.input_font)
+        
         # Configure root grid
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
@@ -166,8 +185,8 @@ class InvoiceView:
         total_frame = ttk.Frame(form_frame)
         total_frame.grid(row=5, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=10)
         
-        ttk.Label(total_frame, text="Tổng tiền:", font=('Arial', 12, 'bold')).pack(anchor=tk.W, pady=5)
-        self.label_total = ttk.Label(total_frame, text="0 VNĐ", font=('Arial', 14, 'bold'), foreground='red')
+        ttk.Label(total_frame, text="Tổng tiền:", font=('Arial', 14, 'bold')).pack(anchor=tk.W, pady=5)
+        self.label_total = ttk.Label(total_frame, text="0 VNĐ", font=('Arial', 16, 'bold'), foreground='red')
         self.label_total.pack(anchor=tk.W, pady=5)
         
         btn_frame = ttk.Frame(total_frame)

@@ -35,7 +35,7 @@ class MainApplication:
     
     def setup_menu(self):
         """Setup the menu bar"""
-        menubar = tk.Menu(self.root)
+        menubar = tk.Menu(self.root, font=('Arial', 12))
         self.root.config(menu=menubar)
         
         # Add menu items directly to menubar

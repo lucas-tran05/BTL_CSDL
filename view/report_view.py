@@ -11,6 +11,17 @@ class ReportView:
         self._build_ui()
 
     def _build_ui(self):
+        # Configure font styles
+        style = ttk.Style()
+        style.configure('TLabel', font=('Arial', 12))
+        style.configure('TButton', font=('Arial', 12), padding=8)
+        style.configure('TCombobox', font=('Arial', 12))
+        style.configure('Treeview', font=('Arial', 11), rowheight=28)
+        style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+        
+        # Configure option menu (dropdown) font
+        self.parent.option_add('*TCombobox*Listbox.font', ('Arial', 12))
+        
         notebook = ttk.Notebook(self.parent)
         notebook.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
 
@@ -96,7 +107,8 @@ class SeniorityReportFrame:
                 "Điện thoại: 0987654321\n"
                 "Tài khoản Ngân hàng: 0382117403 - MBBank"
             ),
-            justify=tk.LEFT
+            justify=tk.LEFT,
+            font=('Arial', 10)
         )
         masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
 
@@ -104,7 +116,7 @@ class SeniorityReportFrame:
         title_lbl = ttk.Label(
             header_frame,
             text="BÁO CÁO THÂM NIÊN NHÂN VIÊN",
-            font=("TkDefaultFont", 12, "bold")
+            font=("Arial", 14, "bold")
         )
         title_lbl.grid(row=0, column=1, sticky="e")
 
@@ -167,14 +179,15 @@ class RevenueReportFrame:
                 "Điện thoại: 0987654321\n"
                 "Tài khoản Ngân hàng: 0382117403 - MBBank"
             ),
-            justify=tk.LEFT
+            justify=tk.LEFT,
+            font=('Arial', 10)
         )
         masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
 
         title_lbl = ttk.Label(
             header_frame,
             text="BÁO CÁO DOANH THU THEO THÁNG",
-            font=("TkDefaultFont", 12, "bold")
+            font=("Arial", 14, "bold")
         )
         title_lbl.grid(row=0, column=1, sticky="e")
 
