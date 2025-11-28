@@ -403,8 +403,11 @@ class StaffView:
             messagebox.showerror("Lỗi", msg)
             return False
         
-        # Validate ma_quan_ly
-        valid, msg = self.validate_id(data['ma_quan_ly'], "Mã quản lý", 50, required=False)
+        # Validate ma_quan_ly - bắt buộc với tất cả chức vụ TRỪ "Quản lý"
+        is_manager = data['chuc_vu'].strip().lower() == "quản lý" or data['chuc_vu'].strip().lower() == "quản lí"
+        required_ma_quan_ly = not is_manager
+        
+        valid, msg = self.validate_id(data['ma_quan_ly'], "Mã quản lý", 50, required=required_ma_quan_ly)
         if not valid:
             messagebox.showerror("Lỗi", msg)
             return False

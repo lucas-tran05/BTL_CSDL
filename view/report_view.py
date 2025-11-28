@@ -98,20 +98,20 @@ class SeniorityReportFrame:
         header_frame = ttk.Frame(self.root)
         header_frame.pack(fill=tk.X, padx=4, pady=(4,2))
 
-        # Pharmacy info (masthead)
-        masthead = ttk.Label(
-            header_frame,
-            text=(
-                "Nhà thuốc The Blue\n"
-                "Mã số thuế: 012345\n"
-                "Địa chỉ: Số 10, Trần Phú, Hà Đông, Hà Nội\n"
-                "Điện thoại: 0987654321\n"
-                "Tài khoản Ngân hàng: 0382117403 - MBBank"
-            ),
-            justify=tk.LEFT,
-            font=('Arial', 10)
-        )
-        masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
+        # # Pharmacy info (masthead)
+        # masthead = ttk.Label(
+        #     header_frame,
+        #     text=(
+        #         "Nhà thuốc The Blue\n"
+        #         "Mã số thuế: 012345\n"
+        #         "Địa chỉ: Số 10, Trần Phú, Hà Đông, Hà Nội\n"
+        #         "Điện thoại: 0987654321\n"
+        #         "Tài khoản Ngân hàng: 0382117403 - MBBank"
+        #     ),
+        #     justify=tk.LEFT,
+        #     font=('Arial', 10)
+        # )
+        # masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
 
         # Report title
         title_lbl = ttk.Label(
@@ -121,15 +121,15 @@ class SeniorityReportFrame:
         )
         title_lbl.grid(row=0, column=1, sticky="e")
 
-        # Numbering line
-        numbering_frame = ttk.Frame(self.root)
-        numbering_frame.pack(fill=tk.X, padx=4, pady=(0,4))
-        numbering_lbl = ttk.Label(
-            numbering_frame,
-            text="Mẫu số: TTTTT0101    Số: 0000",
-            anchor="e"
-        )
-        numbering_lbl.pack(fill=tk.X)
+        # # Numbering line
+        # numbering_frame = ttk.Frame(self.root)
+        # numbering_frame.pack(fill=tk.X, padx=4, pady=(0,4))
+        # numbering_lbl = ttk.Label(
+        #     numbering_frame,
+        #     text="Mẫu số: TTTTT0101    Số: 0000",
+        #     anchor="e"
+        # )
+        # numbering_lbl.pack(fill=tk.X)
 
         filter_frame = ttk.LabelFrame(self.root, text="Bộ lọc")
         filter_frame.pack(fill=tk.X, padx=4, pady=4)
@@ -171,35 +171,35 @@ class RevenueReportFrame:
         header_frame = ttk.Frame(self.root)
         header_frame.pack(fill=tk.X, padx=4, pady=(4,2))
 
-        masthead = ttk.Label(
-            header_frame,
-            text=(
-                "THE BLUE\n"
-                "Mã số thuế: 012345\n"
-                "Địa chỉ: Số 10, Trần Phú, Hà Đông, Hà Nội\n"
-                "Điện thoại: 0987654321\n"
-                "Tài khoản Ngân hàng: 0382117403 - MBBank"
-            ),
-            justify=tk.LEFT,
-            font=('Arial', 10)
-        )
-        masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
+        # masthead = ttk.Label(
+        #     header_frame,
+        #     text=(
+        #         "THE BLUE\n"
+        #         "Mã số thuế: 012345\n"
+        #         "Địa chỉ: Số 10, Trần Phú, Hà Đông, Hà Nội\n"
+        #         "Điện thoại: 0987654321\n"
+        #         "Tài khoản Ngân hàng: 0382117403 - MBBank"
+        #     ),
+        #     justify=tk.LEFT,
+        #     font=('Arial', 10)
+        # )
+        # masthead.grid(row=0, column=0, sticky="w", padx=(2,20))
 
         title_lbl = ttk.Label(
             header_frame,
             text="BÁO CÁO DOANH THU THEO THÁNG",
-            font=("Arial", 14, "bold")
+            font=("Arial", 14, "bold"),
         )
         title_lbl.grid(row=0, column=1, sticky="e")
 
-        numbering_frame = ttk.Frame(self.root)
-        numbering_frame.pack(fill=tk.X, padx=4, pady=(0,4))
-        numbering_lbl = ttk.Label(
-            numbering_frame,
-            text="Mẫu số: TTTTT0101    Số: 0000",
-            anchor="e"
-        )
-        numbering_lbl.pack(fill=tk.X)
+        # numbering_frame = ttk.Frame(self.root)
+        # numbering_frame.pack(fill=tk.X, padx=4, pady=(0,4))
+        # numbering_lbl = ttk.Label(
+        #     numbering_frame,
+        #     text="Mẫu số: TTTTT0101    Số: 0000",
+        #     anchor="e"
+        # )
+        # numbering_lbl.pack(fill=tk.X)
 
         filter_frame = ttk.LabelFrame(self.root, text="Bộ lọc")
         filter_frame.pack(fill=tk.X, padx=4, pady=4)
@@ -242,10 +242,12 @@ class RevenueReportFrame:
                 seen.add(v)
                 unique.append(v)
         self.month_year_cb["values"] = unique
-        self.month_year_cb.current(0)
+        if unique:
+            self.month_year_cb.current(0)
 
     def _on_change(self, _):
-        self._view_report()
+        # Không tự động load khi combobox thay đổi, chỉ load khi click nút
+        pass
 
     def _view_report(self):
         val = self.month_year_cb.get()
