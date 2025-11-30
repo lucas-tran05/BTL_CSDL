@@ -87,33 +87,46 @@ class ReportModel:
 
     def get_seniority(self, position=None):
         if self.backend == "mysql":
-            base = "SELECT ma_nv, ho_va_ten, chuc_vu, ngay_vao_lam FROM NHAN_VIEN"
-            params = []
-            if position:
-                base += " WHERE chuc_vu = %s"
-                params.append(position)
-            base += " ORDER BY ngay_vao_lam"
-            rows = []
             conn = self._get_conn()
             try:
-                cur = conn.cursor()
-                cur.execute(base, tuple(params))
-                for ma_nv, ho_va_ten, chuc_vu, ngay_vao_lam in cur.fetchall():
-                    tenure_years, tenure_months = self._calc_tenure(str(ngay_vao_lam))
-                    group = self._tenure_group(tenure_years, tenure_months)
-                    rows.append({
-                        "ma_nv": ma_nv,
-                        "ho_va_ten": ho_va_ten,
-                        "chuc_vu": chuc_vu,
-                        "ngay_vao_lam": self._format_date(str(ngay_vao_lam)),
-                        "tham_nien": f"{tenure_years} năm {tenure_months} tháng",
-                        "nhom_tham_nien": group
-                    })
+                cur = conn.cursor(dictionary=True)
+                sql = """
+                    SELECT
+                        nv.ma_nv,
+                        nv.ho_va_ten,
+                        nv.chuc_vu,
+                        nv.ngay_vao_lam,
+                        CONCAT(
+                            TIMESTAMPDIFF(YEAR, nv.ngay_vao_lam, CURDATE()), ' năm ',
+                            MOD(TIMESTAMPDIFF(MONTH, nv.ngay_vao_lam, CURDATE()),12), ' tháng'
+                        ) AS tham_nien,
+                        CASE
+                            WHEN TIMESTAMPDIFF(YEAR, nv.ngay_vao_lam, CURDATE()) < 1 THEN 'Dưới 1 năm'
+                            WHEN TIMESTAMPDIFF(YEAR, nv.ngay_vao_lam, CURDATE()) BETWEEN 1 AND 3 THEN '1-3 năm'
+                            WHEN TIMESTAMPDIFF(YEAR, nv.ngay_vao_lam, CURDATE()) BETWEEN 4 AND 6 THEN '4-6 năm'
+                            ELSE 'Trên 6 năm'
+                        END AS nhom_tham_nien
+                    FROM NHAN_VIEN nv
+                """
+                params = []
+                if position:
+                    sql += " WHERE nv.chuc_vu = %s"
+                    params.append(position)
+                sql += " ORDER BY nv.ngay_vao_lam"
+                cur.execute(sql, tuple(params))
+                rows = cur.fetchall() or []
+                for r in rows:
+                    dt = str(r.get("ngay_vao_lam", ""))
+                    try:
+                        d = datetime.strptime(dt, "%Y-%m-%d")
+                        r["ngay_vao_lam"] = d.strftime("%d/%m/%Y")
+                    except ValueError:
+                        pass
+                return rows
             except Exception:
-                pass
+                return []
             finally:
                 conn.close()
-            return rows
         # SQLite path
         base = "SELECT ma_nv, ho_va_ten, chuc_vu, ngay_vao_lam FROM NHAN_VIEN"
         params = []
