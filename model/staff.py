@@ -3,13 +3,10 @@ from datetime import datetime
 
 
 class Staff:
-    """Staff model for database operations"""
-    
     def __init__(self, db: Database):
         self.db = db
     
     def _convert_date_format(self, date_str):
-        """Validate date format YYYY-MM-DD for MySQL"""
         try:
             if not date_str:
                 return None
@@ -23,21 +20,15 @@ class Staff:
             return None
     
     def get_all_positions(self):
-        """Get all available positions from BAC_LUONG"""
         query = "SELECT chuc_vu, he_so_luong FROM BAC_LUONG ORDER BY chuc_vu"
         return self.db.fetch_query(query)
     
     def check_position_exists(self, chuc_vu):
-        """Check if position exists in BAC_LUONG"""
         query = "SELECT COUNT(*) as count FROM BAC_LUONG WHERE chuc_vu = %s"
         result = self.db.fetch_query(query, (chuc_vu,))
         return result[0]['count'] > 0 if result else False
     
     def create_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly):
-        """
-        Create a new staff (NHAN_VIEN and LUONG tables)
-        Returns: (success: bool, error_message: str)
-        """
         try:
             # Check if position exists in BAC_LUONG
             if not self.check_position_exists(chuc_vu):
@@ -77,9 +68,6 @@ class Staff:
             return False, f"Lỗi: {error_msg}"
     
     def get_all_staff(self):
-        """
-        Get all staff information
-        """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
                nv.ma_quan_ly
@@ -89,9 +77,6 @@ class Staff:
         return self.db.fetch_query(query)
     
     def search_staff(self, search_term):
-        """
-        Search staff by name, position, or phone
-        """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
                nv.ma_quan_ly
@@ -104,9 +89,6 @@ class Staff:
         return self.db.fetch_query(query, params)
     
     def get_staff_by_id(self, ma_nv):
-        """
-        Get staff by ma_nv
-        """
         query = """
         SELECT nv.ma_nv, nv.ho_va_ten, nv.chuc_vu, nv.sdt, nv.ngay_vao_lam, 
                nv.ma_quan_ly
@@ -118,9 +100,6 @@ class Staff:
         return result[0] if result else None
     
     def update_staff(self, ma_nv, ho_va_ten, sdt, chuc_vu, ngay_vao_lam, ma_quan_ly):
-        """
-        Update staff information (NHAN_VIEN and LUONG tables)
-        """
         try:
             # Convert date format
             ngay_vao_lam_formatted = self._convert_date_format(ngay_vao_lam)
@@ -140,9 +119,6 @@ class Staff:
             return False
     
     def delete_staff(self, ma_nv):
-        """
-        Delete staff (CASCADE will delete LUONG record automatically)
-        """
         query = "DELETE FROM NHAN_VIEN WHERE ma_nv = %s"
         params = (ma_nv,)
         cursor = self.db.execute_query(query, params)

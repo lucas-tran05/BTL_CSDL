@@ -7,9 +7,6 @@ class Invoice:
         self.db = db
     
     def create_invoice(self, ma_hoa_don, ten_khach_hang, ma_nv, giam_gia, items):
-        """
-        Create a new invoice with items
-        """
         try:
             ngay_gio = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             
@@ -36,7 +33,7 @@ class Invoice:
                     item['ma_thuoc'],
                     item['don_vi_tinh'],
                     item['so_luong'],
-                    giam_gia,  # Apply invoice-level discount to all items
+                    giam_gia,
                     item['don_gia']
                 )
                 cursor_chi_tiet = self.db.execute_query(query_chi_tiet, params_chi_tiet)
@@ -48,9 +45,6 @@ class Invoice:
             return False, f"Lỗi khi tạo hóa đơn: {str(e)}"
     
     def get_all_invoices(self):
-        """
-        Get all invoices with calculated totals
-        """
         query = """
         SELECT 
             h.ma_hoa_don,
@@ -73,9 +67,6 @@ class Invoice:
         return self.db.fetch_query(query)
     
     def get_invoice_by_id(self, ma_hoa_don):
-        """
-        Get invoice by ID with details
-        """
         query = """
         SELECT h.ma_hoa_don, h.ten_khach_hang, h.ngay_gio, h.ma_nv,
                ht.ma_thuoc, t.ten_thuoc, ht.don_vi_tinh, ht.so_luong, ht.gia_ban as don_gia, ht.giam_gia,
@@ -89,9 +80,6 @@ class Invoice:
         return self.db.fetch_query(query, params)
     
     def delete_invoice(self, ma_hoa_don):
-        """
-        Delete invoice
-        """
         try:
             # Delete invoice details first (foreign key constraint)
             query_chi_tiet = "DELETE FROM HOA_DON_THUOC WHERE ma_hoa_don = %s"
@@ -106,7 +94,6 @@ class Invoice:
             return False, f"Lỗi khi xóa hóa đơn: {str(e)}"
     
     def search_invoices(self, search_term):
-        """Search invoices by ID, customer name, or staff ID"""
         query = """
         SELECT 
             h.ma_hoa_don,
