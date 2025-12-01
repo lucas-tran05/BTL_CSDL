@@ -117,9 +117,9 @@ class StaffView:
         style = ttk.Style()
         style.configure('TLabel', font=self.label_font)
         style.configure('TLabelframe.Label', font=('Arial', scaled_base, 'bold'))
-        style.configure('TButton', font=self.button_font, padding=8)
-        style.configure('TEntry', font=self.input_font, padding=5)
-        style.configure('TCombobox', font=self.input_font, padding=5)
+        style.configure('TButton', font=self.button_font, padding=int(8 * font_scale))
+        style.configure('TEntry', font=self.input_font, padding=int(5 * font_scale))
+        style.configure('TCombobox', font=self.input_font, padding=int(5 * font_scale))
         style.configure('Treeview', font=('Arial', scaled_tree), rowheight=int(30 * font_scale))
         style.configure('Treeview.Heading', font=('Arial', scaled_base, 'bold'))
         

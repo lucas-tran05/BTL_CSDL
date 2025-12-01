@@ -22,8 +22,8 @@ class ReportView:
         style = ttk.Style()
         style.configure('TLabel', font=('Arial', scaled_base))
         style.configure('TLabelframe.Label', font=('Arial', scaled_base, 'bold'))
-        style.configure('TButton', font=('Arial', scaled_base), padding=8)
-        style.configure('TCombobox', font=('Arial', scaled_base), padding=5)
+        style.configure('TButton', font=('Arial', scaled_base), padding=int(8 * self.font_scale))
+        style.configure('TCombobox', font=('Arial', scaled_base), padding=int(5 * self.font_scale))
         style.configure('Treeview', font=('Arial', scaled_tree), rowheight=int(30 * self.font_scale))
         style.configure('Treeview.Heading', font=('Arial', scaled_base, 'bold'))
         
