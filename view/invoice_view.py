@@ -79,26 +79,35 @@ class InvoiceView:
         except ValueError:
             return False, f"{field_name} phải là số"
     
-    def __init__(self, root, controller):
+    def __init__(self, root, controller, font_scale=1.0):
         self.root = root
         self.controller = controller
+        self.font_scale = font_scale
         
-        # Configure font styles
-        self.default_font = ('Arial', 16)
-        self.label_font = ('Arial', 16)
-        self.button_font = ('Arial', 16)
-        self.heading_font = ('Arial', 18, 'bold')
-        self.input_font = ('Arial', 16)
+        # Configure font styles with scaling
+        base_size = 16
+        heading_size = 18
+        tree_size = 15
+        
+        scaled_base = int(base_size * font_scale)
+        scaled_heading = int(heading_size * font_scale)
+        scaled_tree = int(tree_size * font_scale)
+        
+        self.default_font = ('Arial', scaled_base)
+        self.label_font = ('Arial', scaled_base)
+        self.button_font = ('Arial', scaled_base)
+        self.heading_font = ('Arial', scaled_heading, 'bold')
+        self.input_font = ('Arial', scaled_base)
         
         # Configure ttk styles
         style = ttk.Style()
         style.configure('TLabel', font=self.label_font)
-        style.configure('TLabelframe.Label', font=('Arial', 16, 'bold'))
+        style.configure('TLabelframe.Label', font=('Arial', scaled_base, 'bold'))
         style.configure('TButton', font=self.button_font, padding=8)
         style.configure('TEntry', font=self.input_font, padding=5)
         style.configure('TCombobox', font=self.input_font, padding=5)
-        style.configure('Treeview', font=('Arial', 15), rowheight=20)
-        style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
+        style.configure('Treeview', font=('Arial', scaled_tree), rowheight=int(20 * font_scale))
+        style.configure('Treeview.Heading', font=('Arial', scaled_base, 'bold'))
         
         # Configure option menu (dropdown) font
         self.root.option_add('*TCombobox*Listbox.font', self.input_font)
@@ -188,8 +197,8 @@ class InvoiceView:
         
         total_display_frame = ttk.Frame(total_frame)
         total_display_frame.pack(fill=tk.X, pady=5)
-        ttk.Label(total_display_frame, text="Tổng tiền:", font=('Arial', 18, 'bold')).pack(side=tk.LEFT, padx=(0, 10))
-        self.label_total = ttk.Label(total_display_frame, text="0 VNĐ", font=('Arial', 20, 'bold'), foreground='red')
+        ttk.Label(total_display_frame, text="Tổng tiền:", font=('Arial', int(18 * self.font_scale), 'bold')).pack(side=tk.LEFT, padx=(0, 10))
+        self.label_total = ttk.Label(total_display_frame, text="0 VNĐ", font=('Arial', int(20 * self.font_scale), 'bold'), foreground='red')
         self.label_total.pack(side=tk.LEFT)
         
         btn_frame = ttk.Frame(total_frame)

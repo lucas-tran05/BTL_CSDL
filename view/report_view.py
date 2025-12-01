@@ -2,26 +2,33 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 class ReportView:
-    def __init__(self, parent, controller=None):
+    def __init__(self, parent, controller=None, font_scale=1.0):
         self.parent = parent
         self.controller = controller
+        self.font_scale = font_scale
         self._seniority_rows = []
         self._revenue_rows = []
 
         self._build_ui()
 
     def _build_ui(self):
-        # Configure font styles
+        # Configure font styles with scaling
+        base_size = 16
+        tree_size = 15
+        
+        scaled_base = int(base_size * self.font_scale)
+        scaled_tree = int(tree_size * self.font_scale)
+        
         style = ttk.Style()
-        style.configure('TLabel', font=('Arial', 16))
-        style.configure('TLabelframe.Label', font=('Arial', 16, 'bold'))
-        style.configure('TButton', font=('Arial', 16), padding=8)
-        style.configure('TCombobox', font=('Arial', 16), padding=5)
-        style.configure('Treeview', font=('Arial', 15), rowheight=30)
-        style.configure('Treeview.Heading', font=('Arial', 16, 'bold'))
+        style.configure('TLabel', font=('Arial', scaled_base))
+        style.configure('TLabelframe.Label', font=('Arial', scaled_base, 'bold'))
+        style.configure('TButton', font=('Arial', scaled_base), padding=8)
+        style.configure('TCombobox', font=('Arial', scaled_base), padding=5)
+        style.configure('Treeview', font=('Arial', scaled_tree), rowheight=int(30 * self.font_scale))
+        style.configure('Treeview.Heading', font=('Arial', scaled_base, 'bold'))
         
         # Configure option menu (dropdown) font
-        self.parent.option_add('*TCombobox*Listbox.font', ('Arial', 16))
+        self.parent.option_add('*TCombobox*Listbox.font', ('Arial', scaled_base))
         
         notebook = ttk.Notebook(self.parent)
         notebook.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
